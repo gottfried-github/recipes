@@ -7,10 +7,15 @@ const Recipe = ({ recipe, handleAddToSelected }) => {
 
   return (
     <div>
-      <Link to={`/recipes/${recipe.idMeal}`}>{recipe.strMeal}</Link>
-      <button disabled={recipe.selected} onClick={handleAddToSelectedClick}>
-        Add to Selected
-      </button>
+      <div>
+        <Link to={`/recipes/${recipe.idMeal}`}>{recipe.strMeal}</Link>
+      </div>
+      <div>category: {recipe.strCategory}</div>
+      <div>
+        <button disabled={recipe.selected} onClick={handleAddToSelectedClick}>
+          Add to Selected
+        </button>
+      </div>
     </div>
   )
 }
