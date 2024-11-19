@@ -5,14 +5,39 @@ import Recipes from './components/Recipes/Recipes'
 import RecipesSelected from './components/RecipesSelected/RecipesSelected'
 import Recipe from './components/Recipe/Recipe'
 
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+
 const queryRecipes = () => ({
   queryKey: ['recipes'],
   queryFn: async () => {
-    // get data
-    const res = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?f=a')
-    const data: RecipesData = await res.json()
+    const recipesByLetterPromises = []
 
-    return data.meals.map(recipe => ({ ...recipe, selected: false }))
+    for (const letter of ALPHABET) {
+      recipesByLetterPromises.push(
+        new Promise(async (resolve, reject) => {
+          try {
+            const res = await fetch(
+              `https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`
+            )
+            const data: RecipesData = await res.json()
+
+            resolve(data.meals)
+          } catch (e) {
+            reject(e)
+          }
+        })
+      )
+    }
+
+    const recipesByLetterResults = (await Promise.all(recipesByLetterPromises)) as TypeRecipe[][]
+
+    const recipes = recipesByLetterResults
+      .reduce((recipes, recipesByLetter) => {
+        return recipesByLetter ? [...recipes, ...recipesByLetter] : recipes
+      }, [])
+      .map(recipe => ({ ...recipe, selected: false }))
+
+    return recipes
   },
 })
 
