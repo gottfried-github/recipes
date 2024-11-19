@@ -10,30 +10,12 @@ import FormLabel from '@mui/material/FormLabel'
 import { Recipe as TypeRecipe, Category } from '../../types/types'
 import Recipe from './Recipe/Recipe'
 
-/*
-export default function RadioButtonsGroup() {
-  return (
-    <FormControl>
-      <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
-      <RadioGroup
-        aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="female"
-        name="radio-buttons-group"
-      >
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-        <FormControlLabel value="other" control={<Radio />} label="Other" />
-      </RadioGroup>
-    </FormControl>
-  )
-}
-*/
-
 const Recipes = () => {
   const queryClient = useQueryClient()
   const submit = useSubmit()
 
   const [currentCategory, setCurrentCategory] = useState<string>('')
+  const [currentPage, setCurrentPage] = useState(0)
 
   const { recipes, categories } = useLoaderData() as {
     recipes: TypeRecipe[]
@@ -46,9 +28,48 @@ const Recipes = () => {
     return recipes.filter(recipe => recipe.strCategory === currentCategory)
   }, [recipes, currentCategory])
 
-  // const pages = useMemo(() => {
-  //   // paginate recipes
-  // }, [recipesByCategory])
+  // paginate recipes
+  const pages = useMemo(() => {
+    const pages = []
+    let i = 0
+
+    while (i < recipesByCategory.length + 1) {
+      if (i % 10 === 0 && i > 0) {
+        pages.push(recipesByCategory.slice(i - 10, i))
+      }
+
+      if (i % 10 === 0 && recipesByCategory.length - i < 10) {
+        pages.push(recipesByCategory.slice(i))
+        break
+      }
+
+      i++
+    }
+
+    return pages
+  }, [recipesByCategory])
+
+  const pagesElData = useMemo(() => {
+    if (pages.length < 10) {
+      return pages.map((page, i) => ({ label: `${i + 1}`, value: i }))
+    } else if (pages.length - currentPage < 10) {
+      return pages
+        .slice(currentPage)
+        .map((page, i) => ({ label: `${i + currentPage + 1}`, value: i + currentPage }))
+    } else {
+      const pagesElData = []
+      let i = currentPage
+
+      while (i < currentPage + 7) {
+        pagesElData.push({ label: `${i + 1}`, value: i })
+        i++
+      }
+
+      pagesElData.push({ label: '...' }, { label: `${pages.length}`, value: pages.length - 1 })
+
+      return pagesElData
+    }
+  }, [pages, currentPage])
 
   const handleSelectRecipe = (recipe: TypeRecipe) => {
     queryClient.setQueryData(['recipes'], (recipes: TypeRecipe[]) => {
@@ -64,6 +85,18 @@ const Recipes = () => {
 
   const handleCategoryChange = (ev: ChangeEvent, v: string) => {
     setCurrentCategory(v)
+  }
+
+  const handlePageElClick = (v: number) => {
+    setCurrentPage(v)
+  }
+
+  const handlePagePrevClick = () => {
+    setCurrentPage(currentPage - 1)
+  }
+
+  const handlePageNextClick = () => {
+    setCurrentPage(currentPage + 1)
   }
 
   return (
@@ -91,9 +124,26 @@ const Recipes = () => {
       </CategoriesContainer>
       <RecipesContainer>
         <div>
-          {recipesByCategory.map(recipe => (
+          {pages[currentPage].map(recipe => (
             <Recipe key={recipe.idMeal} recipe={recipe} handleAddToSelected={handleSelectRecipe} />
           ))}
+        </div>
+        <div>
+          <button onClick={handlePagePrevClick}>Previous</button>
+          {pagesElData.map(pageElData => (
+            <span
+              onClick={
+                pageElData.value
+                  ? () => {
+                      handlePageElClick(pageElData.value)
+                    }
+                  : undefined
+              }
+            >
+              {pageElData.label}
+            </span>
+          ))}
+          <button onClick={handlePageNextClick}>Next</button>
         </div>
         <Link to="/selected">Selected Recipes</Link>
       </RecipesContainer>
