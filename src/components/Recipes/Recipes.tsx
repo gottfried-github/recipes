@@ -1,6 +1,6 @@
 import { useState, useMemo, ChangeEvent } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { useLoaderData, useSubmit, Link } from 'react-router-dom'
+import { useLoaderData, useSubmit } from 'react-router-dom'
 import styled from '@emotion/styled'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
@@ -156,7 +156,7 @@ const Recipes = () => {
         </div>
         <RecipesPageContainer>
           {pages[currentPage].map(recipe => (
-            <Recipe key={recipe.idMeal} recipe={recipe} handleAddToSelected={handleSelectRecipe} />
+            <Recipe key={recipe.idMeal} recipe={recipe} />
           ))}
         </RecipesPageContainer>
         <PaginationBarContainer>

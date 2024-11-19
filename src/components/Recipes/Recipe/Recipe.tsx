@@ -7,10 +7,10 @@ import { Recipe as TypeRecipe } from '../../../types/types'
 
 interface Props {
   recipe: TypeRecipe
-  handleAddToSelected: (recipe: TypeRecipe) => void
+  // handleAddToSelected: (recipe: TypeRecipe) => void
 }
 
-const Recipe = ({ recipe, handleAddToSelected }: Props) => {
+const Recipe = ({ recipe }: Props) => {
   // const handleAddToSelectedClick = () => {
   //   handleAddToSelected(recipe)
   // }
