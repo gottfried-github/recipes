@@ -7,6 +7,7 @@ import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
+import { TextField } from '@mui/material'
 import { Recipe as TypeRecipe, Category } from '../../types/types'
 import { debounce } from '../../utils'
 import Recipe from './Recipe/Recipe'
@@ -152,7 +153,7 @@ const Recipes = () => {
       </CategoriesContainer>
       <RecipesContainer>
         <div>
-          <SearchInput type="text" onChange={handleSearchChange} />
+          <TextField label="Search" variant="outlined" fullWidth onChange={handleSearchChange} />
         </div>
         <RecipesPageContainer>
           {pages[currentPage].map(recipe => (
