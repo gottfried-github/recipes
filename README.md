@@ -1,3 +1,6 @@
+# See the app live
+You can see the app running live [here](https://recipes-phi-rosy.vercel.app/).
+
 # Run the app
 
 In the project directory, you can run:
