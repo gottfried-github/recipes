@@ -152,32 +152,33 @@ const Recipes = () => {
       </CategoriesContainer>
       <RecipesContainer>
         <div>
-          <input type="text" onChange={handleSearchChange} />
-          {/* <button onClick={handleSearchChange}>search</button> */}
+          <SearchInput type="text" onChange={handleSearchChange} />
         </div>
         <RecipesPageContainer>
           {pages[currentPage].map(recipe => (
             <Recipe key={recipe.idMeal} recipe={recipe} handleAddToSelected={handleSelectRecipe} />
           ))}
         </RecipesPageContainer>
-        <div>
+        <PaginationBarContainer>
           <button onClick={handlePagePrevClick}>Previous</button>
-          {pagesElData.map(pageElData => (
-            <span
-              onClick={
-                pageElData.value
-                  ? () => {
-                      handlePageElClick(pageElData.value)
-                    }
-                  : undefined
-              }
-            >
-              {pageElData.label}
-            </span>
-          ))}
+          <PaginationPagesContainer>
+            {pagesElData.map(pageElData => (
+              <PaginationButton
+                onClick={
+                  pageElData.value
+                    ? () => {
+                        handlePageElClick(pageElData.value)
+                      }
+                    : undefined
+                }
+              >
+                {pageElData.label}
+              </PaginationButton>
+            ))}
+          </PaginationPagesContainer>
           <button onClick={handlePageNextClick}>Next</button>
-        </div>
-        <Link to="/selected">Selected Recipes</Link>
+        </PaginationBarContainer>
+        {/* <Link to="/selected">Selected Recipes</Link> */}
       </RecipesContainer>
     </PageContainer>
   )
@@ -192,6 +193,12 @@ const PageContainer = styled.div`
 
 const RecipesContainer = styled.div`
   grid-column: 2;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 16px;
+  row-gap: 16px;
 `
 
 const RecipesPageContainer = styled.div`
@@ -199,7 +206,7 @@ const RecipesPageContainer = styled.div`
   flex-direction: column;
 
   row-gap: 16px;
-  padding: 0 16px;
+  /* padding: 0 16px; */
 `
 
 const CategoriesContainer = styled.div`
@@ -213,4 +220,29 @@ const CategoriesFormControl = styled(FormControl)`
   box-sizing: border-box;
   width: 100%;
   padding: 20px;
+`
+
+const SearchInput = styled.input`
+  box-sizing: border-box;
+  width: 100%;
+`
+
+const PaginationBarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+
+  column-gap: 25px;
+`
+
+const PaginationPagesContainer = styled.div`
+  display: flex;
+
+  column-gap: 6px;
+`
+
+const PaginationButton = styled.span`
+  padding: 5px;
+  border: 1px rgba(0, 0, 0, 0.5) solid;
+  border-radius: 4px;
+  cursor: pointer;
 `
