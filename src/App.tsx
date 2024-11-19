@@ -2,7 +2,7 @@ import React from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './queryClient'
 import Router from './router'
-import './App.css'
+// import './App.css'
 
 function App() {
   return (
